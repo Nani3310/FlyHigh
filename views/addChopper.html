@@ -1,0 +1,17 @@
+<%- include('partials/adminSidebar.html') %>
+<div class="auth-container" style="height: auto; min-height: 80vh;">
+  <div class="auth-card">
+    <h2>Add Chopper</h2>
+    <form method="POST" enctype="multipart/form-data">
+      <input name="model" placeholder="Chopper Model" required>
+      <input name="photo" type="file" accept="image/*" required style="margin-bottom: 15px;">
+      <input name="seats" type="number" placeholder="Seats" min="1" required>
+      <input name="speed" type="number" placeholder="Speed (km/h)" min="1" required>
+      <input name="pricePerKm" type="number" placeholder="Price Per Km" min="1" required>
+      <button type="submit">Add Chopper</button>
+    </form>
+  </div>
+</div>
+
+</div>
+</div>
