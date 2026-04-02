@@ -1,0 +1,17 @@
+<%- include('partials/adminSidebar.html') %>
+<div class="auth-container" style="height: auto; min-height: 80vh;">
+  <div class="auth-card">
+    <h2>Add Drone</h2>
+    <form method="POST" action="/admin/add-drone">
+      <input type="text" name="name" placeholder="Drone Name" required>
+      <input type="text" name="model" placeholder="Model" required>
+      <input type="text" name="cameraType" placeholder="Camera Type" required>
+      <input type="text" name="range" placeholder="Range" required>
+      <input type="number" name="pricePerHour" placeholder="Price Per Hour" required min="1">
+      <button type="submit">Add Drone</button>
+    </form>
+  </div>
+</div>
+
+</div>
+</div>
