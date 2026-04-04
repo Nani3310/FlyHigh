@@ -1,0 +1,29 @@
+<%- include('partials/adminSidebar.html') %>
+<div class="auth-container" style="height: auto; min-height: 80vh;">
+  <div class="auth-card">
+    <h2>Add Route</h2>
+    <form method="POST" onsubmit="return validateRoute()">
+      <input name="from" placeholder="From" required>
+      <input name="to" placeholder="To" required>
+      <input name="distanceKm" type="number" placeholder="Distance (km)" required>
+      <input name="estimatedTime" placeholder="Estimated Time" required>
+      <button type="submit">Add Route</button>
+    </form>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+  function validateRoute() {
+    const from = document.querySelector('input[name="from"]').value.trim().toLowerCase();
+    const to = document.querySelector('input[name="to"]').value.trim().toLowerCase();
+    
+    if (from && to && from === to) {
+      alert("Departure and destination locations cannot be the same.");
+      return false;
+    }
+    return true;
+  }
+</script>
