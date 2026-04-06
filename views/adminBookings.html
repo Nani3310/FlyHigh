@@ -1,0 +1,116 @@
+<%- include('partials/adminSidebar.html') %>
+  <div class="auth-container" style="height: auto; min-height: 80vh;">
+    <div class="auth-card" style="width: 90%; max-width: 1000px; padding: 40px;">
+      <h2 style="margin-bottom: 30px; font-size: 28px;">🛩️ Chopper Bookings</h2>
+
+      <style>
+        .badge {
+          padding: 5px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: bold;
+        }
+
+        .badge-Approved {
+          background: #d1fae5;
+          color: #059669;
+        }
+
+        .badge-Rejected {
+          background: #fee2e2;
+          color: #dc2626;
+        }
+
+        .badge-Pending {
+          background: #fef3c7;
+          color: #d97706;
+        }
+      </style>
+
+      <% if (bookings && bookings.length> 0) { %>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;">
+          <% bookings.forEach(b=> { %>
+            <div
+              style="background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; overflow: hidden; transition: transform 0.3s; position: relative;">
+
+              <div
+                style="background: #f3f4f6; padding: 15px 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 16px; color: #111827;">ID: <%=
+                    b._id.toString().substring(0,8).toUpperCase() %>
+                </h3>
+                <span class="badge badge-<%= b.status %>">
+                  <%= b.status %>
+                </span>
+              </div>
+
+              <div style="padding: 20px;">
+                <div style="margin-bottom: 15px; background: #eff6ff; padding: 10px; border-radius: 6px;">
+                  <p style="margin: 0 0 5px 0; color: #1e40af; font-weight: bold; font-size: 14px;">Flight Details</p>
+                  <p style="margin: 0 0 5px 0; font-size: 14px; color: #1f2937;"><strong>Route:</strong>
+                    <%= b.routeId ? (b.routeId.from + ' ➔ ' + b.routeId.to) : 'Unknown' %>
+                  </p>
+                  <p style="margin: 0 0 5px 0; font-size: 14px; color: #1f2937;"><strong>Date & Time:</strong>
+                    <%= b.flightDate || 'N/A' %> at <%= b.flightTime || 'N/A' %>
+                  </p>
+                  <p style="margin: 0; font-size: 14px; color: #1f2937;"><strong>Purpose:</strong>
+                    <%= b.purpose || 'N/A' %>
+                  </p>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+                  <span style="color: #6b7280;">User:</span>
+                  <strong style="color: #1f2937;">
+                    <%= b.userId ? (b.userId.name + ' (' + b.userId.email + ')' ) : b.userId %>
+                  </strong>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+                  <span style="color: #6b7280;">Chopper:</span>
+                  <strong style="color: #1f2937;">
+                    <%= b.chopperId ? b.chopperId.model : b.chopperId %>
+                  </strong>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+                  <span style="color: #6b7280;">Passengers:</span>
+                  <strong style="color: #1f2937;">
+                    <%= b.passengers %>
+                  </strong>
+                </div>
+
+                <div
+                  style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #e5e7eb; font-size: 16px;">
+                  <span style="color: #374151; font-weight: bold;">Total Fare:</span>
+                  <strong style="color: #2563eb;">₹<%= b.totalFare %></strong>
+                </div>
+              </div>
+
+              <% if(b.status==="Pending" ) { %>
+                <div
+                  style="padding: 15px 20px; background: #fafafa; border-top: 1px solid #e5e7eb; display: flex; gap: 10px;">
+                  <a href="/admin/approve-booking/<%= b._id %>"
+                    style="flex: 1; text-align: center; background: #10b981; color: white; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; transition: background 0.2s;"
+                    onmouseover="this.style.background='#059669'"
+                    onmouseout="this.style.background='#10b981'">Approve</a>
+                  <a href="/admin/reject-booking/<%= b._id %>"
+                    style="flex: 1; text-align: center; background: #ef4444; color: white; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; transition: background 0.2s;"
+                    onmouseover="this.style.background='#dc2626'"
+                    onmouseout="this.style.background='#ef4444'">Reject</a>
+                </div>
+                <% } %>
+
+            </div>
+            <% }) %>
+        </div>
+        <% } else { %>
+          <div
+            style="text-align: center; padding: 50px; background: #f9fafb; border-radius: 12px; color: #6b7280; border: 1px dashed #d1d5db;">
+            No chopper bookings found.
+          </div>
+          <% } %>
+
+    </div>
+  </div>
+
+  </div>
+  </div>
