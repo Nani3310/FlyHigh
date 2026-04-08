@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .sidebar-btn {
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 15px;
+      margin: 5px 0;
+      background: #2563eb;
+      color: white !important;
+      text-align: center;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .sidebar-btn:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+<%- include('navbar.html') %>
+
+<div class="admin-layout">
+
+<div class="sidebar">
+
+<h2>🚁 Admin Panel</h2>
+
+<a href="/admin/dashboard" class="sidebar-btn">Dashboard</a>
+<a href="/admin/choppers" class="sidebar-btn">View Choppers</a>
+<a href="/admin/routes" class="sidebar-btn">View Routes</a>
+<a href="/admin/drones" class="sidebar-btn">View Drones</a>
+<a href="/admin/drone-bookings" class="sidebar-btn">Drone Bookings</a>
+<a href="/admin/bookings" class="sidebar-btn">Chopper Bookings</a>
+<a href="/" class="sidebar-btn">Home</a>
+
+</div>
+
+<div class="admin-content">
