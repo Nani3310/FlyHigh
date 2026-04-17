@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+  <%- include('partials/navbar.html') %>
+
+    <div class="auth-container">
+
+      <div class="auth-card">
+
+        <h2>Login</h2>
+
+        <form method="POST">
+
+          <input name="email" placeholder="Email" required>
+
+          <div style="position: relative; width: 100%; margin: 10px 0;">
+            <input name="password" id="password" type="password" placeholder="Password" required
+              style="width: 100%; box-sizing: border-box; margin: 0; padding-right: 40px;">
+            <span id="togglePassword"
+              style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; font-size: 18px; color: #6b7280;">👁️</span>
+          </div>
+
+          <button type="submit">Login</button>
+
+        </form>
+
+        <div class="auth-redirect">
+          <p>Don't have an account? <a href="/register">Register</a></p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+      document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordInput = document.getElementById('password');
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+        } else {
+          passwordInput.type = 'password';
+        }
+      });
+    </script>
+
+</body>
+
+</html>

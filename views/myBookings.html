@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Bookings</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .page-header {
+            background: #1f2937;
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            color: #9ca3af;
+            font-size: 18px;
+        }
+        .bookings-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .section-title {
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .booking-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .booking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background: #f3f4f6;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #111827;
+        }
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .badge-pending { background: #fef3c7; color: #d97706; }
+        .badge-approved { background: #d1fae5; color: #059669; }
+        .badge-rejected { background: #fee2e2; color: #dc2626; }
+        
+        .card-body {
+            padding: 20px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            color: #4b5563;
+        }
+        .detail-row:last-child {
+            margin-bottom: 0;
+        }
+        .detail-row strong {
+            color: #1f2937;
+        }
+        .card-footer {
+            padding: 15px 20px;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+            text-align: right;
+        }
+        .btn-cancel {
+            background: #ffe4e6;
+            color: #e11d48;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        .btn-cancel:hover {
+            background: #fecdd3;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            background: #f9fafb;
+            border-radius: 12px;
+            color: #6b7280;
+            border: 1px dashed #d1d5db;
+        }
+    </style>
+</head>
+<body style="background: #fdfdfd; margin: 0; font-family: 'Inter', sans-serif;">
+    <%- include('partials/navbar.html') %>
+
+    <div class="page-header">
+        <h1>Your Flight Itinerary</h1>
+        <p>Manage your upcoming chopper flights and drone rentals.</p>
+    </div>
+
+    <div class="bookings-container">
+        
+        <h2 class="section-title">🚁 Chopper Flights</h2>
+        <% if (bookings && bookings.length > 0) { %>
+            <div class="cards-grid">
+                <% bookings.forEach(b => { %>
+                    <div class="booking-card">
+                        <div class="card-header">
+                            <h3>ID: <%= b._id.toString().substring(0,8).toUpperCase() %></h3>
+                            <span class="badge 
+                                <%= b.status === 'Approved' ? 'badge-approved' : 
+                                    (b.status === 'Rejected' || b.status === 'Cancelled') ? 'badge-rejected' : 'badge-pending' %>">
+                                <%= b.status %>
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="detail-row">
+                                <span>Route</span>
+                                <strong><%= b.routeId ? b.routeId.from + ' ➔ ' + b.routeId.to : 'Not Specified' %></strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Date / Time</span>
+                                <strong><%= b.flightDate %> | <%= b.flightTime %></strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Purpose</span>
+                                <strong><%= b.purpose || 'Not Specified' %></strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Passengers</span>
+                                <strong><%= b.passengers %></strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Total Fare</span>
+                                <strong style="color: #2563eb;">₹<%= b.totalFare %></strong>
+                            </div>
+                        </div>
+                        <% if(b.status === "Pending" || b.status === "Approved") { %>
+                            <div class="card-footer">
+                                <a href="#" onclick="handleCancel(event, 'chopper', '<%= b._id %>', '<%= b.status %>')" class="btn-cancel">Cancel Booking</a>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="empty-state" style="margin-bottom: 60px;">
+                You have no chopper flight bookings yet.
+            </div>
+        <% } %>
+
+
+        <h2 class="section-title">𖣘 Drone Rentals</h2>
+        <% if (typeof droneBookings !== 'undefined' && droneBookings.length > 0) { %>
+            <div class="cards-grid">
+                <% droneBookings.forEach(db => { %>
+                    <div class="booking-card">
+                        <div class="card-header">
+                            <h3>ID: <%= db._id.toString().substring(0,8).toUpperCase() %></h3>
+                            <span class="badge 
+                                <%= db.status === 'Approved' ? 'badge-approved' : 
+                                    (db.status === 'Rejected' || db.status === 'Cancelled') ? 'badge-rejected' : 'badge-pending' %>">
+                                <%= db.status %>
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="detail-row">
+                                <span>Drone</span>
+                                <strong><%= db.droneId ? db.droneId.model : 'Assigned By Dispatch' %></strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Purpose</span>
+                                <strong><%= db.purpose || "Not Specified" %></strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Date / Time</span>
+                                <strong><%= db.startDate %> | <%= db.startTime %></strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Duration</span>
+                                <strong><%= db.hours %> Hours</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Total Fare</span>
+                                <strong style="color: #2563eb;">$<%= db.totalAmount %></strong>
+                            </div>
+                        </div>
+                        <% if(db.status === "Pending" || db.status === "Approved") { %>
+                            <div class="card-footer">
+                                <a href="#" onclick="handleCancel(event, 'drone', '<%= db._id %>', '<%= db.status %>')" class="btn-cancel">Cancel Booking</a>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="empty-state">
+                You have no drone rental bookings yet.
+            </div>
+        <% } %>
+        
+    </div>
+
+    <script>
+        function handleCancel(event, type, id, status) {
+            event.preventDefault();
+            let reason = '';
+            
+            if (status === 'Pending') {
+                reason = prompt("What is the purpose of cancelling?\n\nNote: Your money will be successfully transferred back to your source payment within 36 hours.");
+                // If user clicks cancel on the prompt, abort the cancellation flow mapping.
+                if (reason === null) return; 
+            } else if (status === 'Approved') {
+                const confirmCancel = confirm("Are you sure you want to cancel this booking?\n\nNote: Because this flight is already Approved and dispatched, a refund will NOT be issued.");
+                // If user declines the warning prompt, abort.
+                if (!confirmCancel) return; 
+            }
+
+            const endpoint = (type === 'chopper') ? '/cancel-booking/' : '/cancel-drone-booking/';
+            window.location.href = endpoint + id + '?reason=' + encodeURIComponent(reason || 'No reason provided');
+        }
+    </script>
+</body>
+</html>
