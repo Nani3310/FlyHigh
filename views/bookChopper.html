@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Book Chopper</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<%- include('partials/navbar.html') %>
+
+<div class="auth-container">
+  <div class="auth-card" style="max-width: 1000px; text-align: left; padding: 40px 50px;">
+    
+    <!-- Info Banner -->
+    <div style="background: rgba(37, 99, 235, 0.08); border-left: 4px solid #2563eb; padding: 15px 20px; border-radius: 4px; margin-bottom: 25px; color: #1e3a8a; font-size: 14px; font-weight: 500; display: flex; align-items: center;">
+      <span style="font-size: 18px; margin-right: 12px;">ℹ️</span>
+      Only standard baggage logic applies. Please enter full names as displayed on government ID.
+    </div>
+
+    <!-- Journey Details Bar -->
+    <div style="background: #ffffff; padding: 25px 30px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
+      
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+        <h3 style="margin: 0; font-weight: 800; font-size: 22px; color: #0f172a; text-transform: uppercase;">
+          <%= chopper.model %> 
+          <span style="color: #64748b; font-size: 16px; font-weight: 600;">(VIP CHOPPER)</span>
+        </h3>
+        <span style="color: #0f172a; font-size: 20px;">📍</span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        
+        <!-- From -->
+        <div style="min-width: 200px;">
+          <div style="font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
+            <%= time %> <span style="color: #94a3b8; font-weight: 400;">|</span> <span style="text-transform: uppercase;"><%= route.from %></span>
+          </div>
+          <div style="color: #64748b; font-size: 14px; font-weight: 500;"><%= date %></div>
+        </div>
+
+        <!-- Divider line -->
+        <div style="flex: 1; text-align: center; position: relative; margin: 0 30px;">
+          <div style="border-top: 2px dashed #cbd5e1; width: 100%;"></div>
+          <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: white; padding: 0 15px; color: #94a3b8; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+            Direct Flight
+          </div>
+        </div>
+
+        <!-- To -->
+        <div style="min-width: 200px; text-align: right;">
+          <div style="font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
+            Arrival <span style="color: #94a3b8; font-weight: 400;">|</span> <span style="text-transform: uppercase;"><%= route.to %></span>
+          </div>
+          <div style="color: #64748b; font-size: 14px; font-weight: 500;"><%= date %></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <form method="POST" action="/book">
+
+      <input type="hidden" name="chopperId" value="<%= chopper._id %>">
+      <input type="hidden" name="routeId" value="<%= route._id %>">
+      <input type="hidden" name="date" value="<%= date %>">
+      <input type="hidden" name="time" value="<%= time %>">
+
+      <!-- Passenger Container -->
+      <div style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
+        
+        <div style="background: #f8fafc; padding: 15px 25px; border-bottom: 1px solid #e2e8f0;">
+          <h4 style="margin: 0; font-size: 18px; color: #0f172a; font-weight: 700;">Passenger Details</h4>
+        </div>
+        
+        <div style="padding: 25px; background: white;">
+          <div style="margin-bottom: 25px; display: flex; gap: 20px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 200px;">
+              <label style="font-weight: 600; color: #475569; font-size: 14px; margin-bottom: 8px; display: block;">Number of Passengers (Max <%= chopper.seats %>)</label>
+              <input type="number" id="numPassengers" name="passengers" placeholder="Enter number" required min="1" max="<%= chopper.seats %>" style="width: 100%; margin: 0; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 15px; font-size: 15px; box-sizing: border-box;">
+            </div>
+            <div style="flex: 1; min-width: 240px;">
+              <label style="font-weight: 600; color: #475569; font-size: 14px; margin-bottom: 8px; display: block;">Purpose of Trip</label>
+              <select id="purposeSelect" name="purpose" required style="width: 100%; box-sizing: border-box; margin: 0; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 15px; font-size: 15px; font-family: 'Inter', sans-serif; cursor: pointer; color: #333; background: white;">
+                <option value="" disabled selected>Select Purpose</option>
+                <option value="Political Visit">Political Visit</option>
+                <option value="VIP Trip">VIP Trip</option>
+                <option value="Medical Emergency">Medical Emergency</option>
+                <option value="Tourism">Tourism</option>
+                <option value="Corporate/Business">Corporate/Business</option>
+                <option value="Other">Other</option>
+              </select>
+              <div id="otherPurposeContainer" style="margin-top: 15px;"></div>
+            </div>
+          </div>
+          <div id="passenger-forms"></div>
+        </div>
+      </div>
+
+      <div style="text-align: right;">
+        <button type="submit" class="result-btn" style="width: 250px; text-align: center;">Confirm Booking</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById('numPassengers').addEventListener('input', function (e) {
+    const num = parseInt(e.target.value) || 0;
+    const maxSeats = parseInt('<%= chopper.seats %>') || 10;
+    const validNum = num > maxSeats ? maxSeats : num;
+
+    if (num > maxSeats) {
+      alert("This chopper only has " + maxSeats + " seats!");
+      e.target.value = maxSeats;
+    }
+
+    const container = document.getElementById('passenger-forms');
+    container.innerHTML = '';
+    
+    for (let i = 0; i < validNum; i++) {
+      container.innerHTML += `
+        <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+          
+          <div style="color: #64748b; font-weight: 700; width: 20px;">${i + 1}.</div>
+          
+          <div style="flex: 3;">
+            <input name="passengerDetails[${i}][name]" placeholder="Name" required 
+                   style="width: 100%; box-sizing: border-box; margin: 0; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: white; font-family: 'Inter', sans-serif;">
+          </div>
+          
+          <div style="flex: 1;">
+            <input name="passengerDetails[${i}][age]" type="number" placeholder="Age" min="1" max="120" required 
+                   style="width: 100%; box-sizing: border-box; margin: 0; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: white; font-family: 'Inter', sans-serif;">
+          </div>
+          
+          <div style="flex: 2;">
+            <select name="passengerDetails[${i}][gender]" required 
+                    style="width: 100%; box-sizing: border-box; margin: 0; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: white; cursor: pointer; font-family: 'Inter', sans-serif; color: #333;">
+              <option value="" disabled selected>Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          
+          <div style="flex: 2;">
+            <select name="passengerDetails[${i}][preference]" 
+                    style="width: 100%; box-sizing: border-box; margin: 0; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: white; cursor: pointer; font-family: 'Inter', sans-serif; color: #333;">
+              <option value="No Preference" selected>No Preference</option>
+              <option value="Window Seat">Window Seat</option>
+              <option value="Aisle Seat">Aisle Seat</option>
+            </select>
+          </div>
+          
+        </div>
+      `;
+    }
+  });
+
+  document.getElementById('purposeSelect').addEventListener('change', function(e) {
+    const container = document.getElementById('otherPurposeContainer');
+    if (e.target.value === 'Other') {
+      container.innerHTML = `<input type="text" name="purposeOther" placeholder="Please specify your particular need..." required style="width: 100%; box-sizing: border-box; margin: 0; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 15px; font-size: 15px; font-family: 'Inter', sans-serif;">`;
+    } else {
+      container.innerHTML = '';
+    }
+  });
+</script>
+
+</body>
+</html>
