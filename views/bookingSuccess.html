@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Booking Success</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <%- include('partials/navbar.html') %>
+
+        <div class="auth-container">
+            <div class="auth-card" style="max-width: 800px; text-align: left; padding: 40px;">
+                <div style="text-align: center;">
+                    <div style="font-size: 60px; margin-bottom: 20px;">✅</div>
+                    <h2 style="color: #16a34a; margin-top: 0; margin-bottom: 15px; font-weight: 800; font-size: 28px;">
+                        Payment Successful!</h2>
+                    <p style="margin-bottom: 30px; color: #64748b; line-height: 1.6; font-size: 15px;">
+                        Your transaction has been securely processed.
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3
+                        style="color: #0f172a; border-bottom: 2px dashed #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; font-weight: 700;">
+                        Booking Details</h3>
+
+                    <% if(!isDrone && typeof booking !=='undefined' && booking) { %>
+                        <div
+                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f8fafc; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                            <div><span
+                                    style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Chopper</span>
+                                <strong style="font-size: 16px; color: #0f172a;">
+                                    <%= booking.chopperId.model %>
+                                </strong></div>
+                            <div><span
+                                    style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Route</span>
+                                <strong style="font-size: 16px; color: #0f172a;">
+                                    <%= booking.routeId.from %> ➔ <%= booking.routeId.to %>
+                                </strong></div>
+                            <div><span
+                                    style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Date</span>
+                                <strong style="font-size: 16px; color: #0f172a;">
+                                    <%= booking.flightDate %>
+                                </strong></div>
+                            <div><span
+                                    style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Time</span>
+                                <strong style="font-size: 16px; color: #0f172a;">
+                                    <%= booking.flightTime %>
+                                </strong></div>
+                            <div><span
+                                    style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Passengers</span>
+                                <strong style="font-size: 16px; color: #0f172a;">
+                                    <%= booking.passengers %>
+                                </strong></div>
+                            <div><span
+                                    style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Purpose</span>
+                                <strong style="font-size: 16px; color: #0f172a;">
+                                    <%= booking.purpose || 'N/A' %>
+                                </strong></div>
+                        </div>
+
+                        <% if(booking.passengerDetails && booking.passengerDetails.length> 0) { %>
+                            <div style="margin-top: 20px;">
+                                <h4 style="color: #475569; font-size: 15px; margin-bottom: 10px;">Passenger Manifest:
+                                </h4>
+                                <% booking.passengerDetails.forEach((p, index)=> { %>
+                                    <div
+                                        style="background: white; border: 1px solid #e2e8f0; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; font-size: 14px;">
+                                        <strong>
+                                            <%= index + 1 %>. <%= p.name %>
+                                        </strong> (<%= p.age %> yrs, <%= p.gender %>)
+                                    </div>
+                                    <% }) %>
+                            </div>
+                            <% } %>
+                                <% } else if (isDrone && typeof booking !=='undefined' && booking) { %>
+                                    <div
+                                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f8fafc; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                                        <div><span
+                                                style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Drone</span>
+                                            <strong style="font-size: 16px; color: #0f172a;">
+                                                <%= booking.droneId ? booking.droneId.model : 'Assigned by Dispatch' %>
+                                            </strong></div>
+                                        <div><span
+                                                style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Date</span>
+                                            <strong style="font-size: 16px; color: #0f172a;">
+                                                <%= booking.startDate %>
+                                            </strong></div>
+                                        <div><span
+                                                style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Start
+                                                Time</span> <strong style="font-size: 16px; color: #0f172a;">
+                                                <%= booking.startTime %>
+                                            </strong></div>
+                                        <div><span
+                                                style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Duration</span>
+                                            <strong style="font-size: 16px; color: #0f172a;">
+                                                <%= booking.hours %> hours
+                                            </strong></div>
+                                        <div><span
+                                                style="color: #64748b; display: block; font-size: 13px; font-weight: 600; text-transform: uppercase;">Purpose</span>
+                                            <strong style="font-size: 16px; color: #0f172a;">
+                                                <%= booking.purpose || 'N/A' %>
+                                            </strong></div>
+                                    </div>
+
+                                    <% if (booking.purposeDetails && Object.keys(booking.purposeDetails).length> 0) { %>
+                                        <div
+                                            style="margin-top: 20px; background: #fdf2f8; border: 1px dashed #fbcfe8; border-radius: 12px; padding: 20px;">
+                                            <h4
+                                                style="color: #be185d; font-size: 15px; margin-top: 0; margin-bottom: 15px; text-transform: uppercase; font-weight: 700;">
+                                                Configuration Specifications</h4>
+                                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                                <% Object.entries(booking.purposeDetails).forEach(([key, value])=> { %>
+                                                    <div>
+                                                        <span
+                                                            style="color: #64748b; display: block; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+                                                            <%= key.replace(/([A-Z])/g, ' $1' ).replace(/^./, str=>
+                                                                str.toUpperCase()) %>
+                                                        </span>
+                                                        <strong style="font-size: 14px; color: #0f172a;">
+                                                            <%= value %>
+                                                        </strong>
+                                                    </div>
+                                                    <% }) %>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                            <% } %>
+                </div>
+
+                <div
+                    style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 12px; margin-bottom: 30px; text-align: center;">
+                    <p style="margin: 0; color: #166534; font-weight: 800; font-size: 20px;">Amount Paid: ₹ <%=
+                            totalFare %>
+                    </p>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h3 style="color: #1e3a8a; font-weight: 800; font-size: 22px; margin-bottom: 5px;">Thank you for
+                        choosing Flyhigh! 🚁</h3>
+                    <% if (isDrone) { %>
+                        <p
+                            style="color: #10b981; font-size: 16px; font-weight: 600; background: #ecfdf5; display: inline-block; padding: 5px 15px; border-radius: 20px; border: 1px solid #10b981;">
+                            Our drone pilot will contact you soon..</p>
+                        <% } else { %>
+                            <p style="color: #64748b; font-size: 15px;">We're looking forward to your flight.</p>
+                            <% } %>
+                </div>
+
+                <a href="/my-bookings" class="result-btn"
+                    style="display: block; width: 100%; text-align: center; box-sizing: border-box; padding: 16px; font-size: 16px;">
+                    View My Bookings
+                </a>
+            </div>
+        </div>
+</body>
+
+</html>
