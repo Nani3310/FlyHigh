@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hire a Drone</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .drone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .drone-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .drone-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .drone-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .drone-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .drone-details {
+            color: #6b7280;
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .price-badge {
+            background: #e0e7ff;
+            color: #4f46e5;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .book-btn {
+            display: block;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .book-btn:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/navbar.html') %>
+
+        <div style="background: #1f2937; color: white; padding: 60px 20px; text-align: center;">
+            <h1 style="font-size: 40px; margin-bottom: 15px;">Available Drones for Hire</h1>
+            <p style="font-size: 18px; color: #9ca3af; max-width: 600px; margin: 0 auto;">Capture stunning aerial
+                footage, race at high speeds, or simply enjoy the thrill of flight. Choose from our premium fleet.</p>
+        </div>
+
+        <div class="drone-grid">
+            <% if (drones && drones.length> 0) { %>
+                <% drones.forEach(drone=> { %>
+                    <div class="drone-card">
+                        <div class="drone-icon">𖣘</div>
+                        <div class="drone-name">
+                            <%= drone.name %>
+                        </div>
+                        <div class="price-badge">$<%= drone.pricePerHour %> / Hour</div>
+                        <div class="drone-details">
+                            <strong>Model:</strong>
+                            <%= drone.model %><br>
+                                <strong>Camera:</strong>
+                                <%= drone.cameraType %><br>
+                                    <strong>Range:</strong>
+                                    <%= drone.range %>
+                        </div>
+                        <a href="/book-drone/<%= drone._id %><%= typeof purpose !== 'undefined' && purpose ? '?purpose=' + encodeURIComponent(purpose) : '' %>" class="book-btn">Book Now</a>
+                    </div>
+                    <% }) %>
+                        <% } else { %>
+                            <div
+                                style="grid-column: 1 / -1; text-align: center; padding: 50px; font-size: 18px; color: #6b7280;">
+                                No drones currently available. Please check back later.
+                            </div>
+                            <% } %>
+        </div>
+
+</body>
+
+</html>
