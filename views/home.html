@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Fly high - Book your Chopper</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <style>
+    /* Force Home Navbar Transparency Overlay */
+    .navbar {
+      position: absolute;
+      width: 100%;
+      box-sizing: border-box;
+      background: linear-gradient(rgba(10, 15, 25, 0.9), transparent) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+  </style>
+
+  <%- include('partials/navbar.html') %>
+
+    <div class="hero">
+
+      <div class="hero-content">
+
+        <% if (typeof user !=='undefined' && user.role==='drone_pilot' ) { %>
+          <% if (user.approvalStatus==='Pending' || user.approvalStatus==='Rejected' ) { %>
+            <div
+              style="background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); padding: 50px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-width: 600px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
+              <h2 style="color: #f8fafc; font-family: 'Outfit', sans-serif; font-size: 32px; margin-top: 0;">
+                Verification Pending</h2>
+              <p style="color: #94a3b8; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">Your request to become
+                a Drone Pilot is still under review by the Admin.</p>
+              <div
+                style="background: rgba(59, 130, 246, 0.1); padding: 20px; border-left: 4px solid #3b82f6; color: #e2e8f0; font-size: 15px; text-align: left; border-radius: 4px;">
+                Please wait until your pilot license is processed to unlock the exact telemetry dispatch console. An
+                admin will verify your documents shortly!
+              </div>
+            </div>
+            <% } else if (user.approvalStatus==='Approved' ) { %>
+              <div
+                style="background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); padding: 50px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-width: 600px; margin: 0 auto; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                <h2
+                  style="color: #f8fafc; font-family: 'Outfit', sans-serif; margin-top: 0; font-size: 36px; letter-spacing: -1px;">
+                  Pilot Dispatch Console</h2>
+                <p style="color: #475569; font-size: 16px; margin-bottom: 30px;">Ready to fly? Monitor your latest
+                  assigned flights and missions directly below.</p>
+                <a href="/pilot-bookings"
+                  style="display: inline-block; background: #10b981; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); transition: transform 0.2s, background 0.2s;"
+                  onmouseover="this.style.background='#059669'; this.style.transform='translateY(-2px)'"
+                  onmouseout="this.style.background='#10b981'; this.style.transform='translateY(0)'">📅 View My
+                  Bookings</a>
+              </div>
+              <% } %>
+                <% } else { %>
+                  <h1>Charter Elite Networks</h1>
+                  <p
+                    style="font-family: 'Outfit', sans-serif; font-size: 1.5rem; letter-spacing: 2px; text-transform: uppercase;">
+                    Fast • Luxury • On-demand</p>
+
+                  <div class="search-card">
+
+                    <form action="/search" method="POST" onsubmit="return validateSearch()">
+
+                      <select name="from" required>
+                        <option value="" disabled selected>From</option>
+                        <% if (typeof fromLocations !=='undefined' ) { %>
+                          <% fromLocations.forEach(loc=> { %>
+                            <option value="<%= loc %>">
+                              <%= loc %>
+                            </option>
+                            <% }) %>
+                              <% } %>
+                      </select>
+
+                      <select name="to" required>
+                        <option value="" disabled selected>To</option>
+                        <% if (typeof toLocations !=='undefined' ) { %>
+                          <% toLocations.forEach(loc=> { %>
+                            <option value="<%= loc %>">
+                              <%= loc %>
+                            </option>
+                            <% }) %>
+                              <% } %>
+                      </select>
+
+                      <input type="date" name="date" id="searchDate" required>
+
+                      <input type="time" name="time" required>
+
+                      <button type="submit">Search</button>
+
+                    </form>
+                  </div>
+
+      </div>
+      <% } %>
+
+    </div>
+
+    </div>
+
+    <% if (typeof user==='undefined' || user.role !=='drone_pilot' ) { %>
+      <div class="drone-hub-banner" id="drones">
+        <div class="hero-content" style="background: rgba(15, 23, 42, 0.4); border-color: rgba(59, 130, 246, 0.3);">
+          <h1 style="font-size: 3.5rem;">Advanced Drone Operations</h1>
+          <p
+            style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; color: #94a3b8; max-width: 600px; margin: 0 auto 30px auto;">
+            From fast delivery and logistics to cinematic event footage and crop analysis—manage it all with one aerial
+            platform.</p>
+          <a href="/drone-purposes" class="drone-btn"
+            style="border-radius: 50px; font-family: 'Outfit', sans-serif;">EXPLORE SERVICES</a>
+        </div>
+      </div>
+      <% } %>
+
+        <div class="container about-us" id="about"
+          style="text-align: center; padding: 100px 20px; background: linear-gradient(rgba(17, 24, 39, 0.82), rgba(17, 24, 39, 0.95)), url('https://images.unsplash.com/photo-1544606138-03820aa54c9d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80') center/cover fixed;">
+          <h2 class="section-title" style="color: white;">Why Choose FlyHigh?</h2>
+          <p class="section-subtitle" style="color: #9ca3af;">
+            We redefine luxury travel by providing on-demand, private helicopter charter services. Experience the world
+            from
+            above with ultimate convenience.
+          </p>
+
+          <div class="feature-grid">
+
+            <div class="feature-card">
+              <div class="feature-icon">🚁</div>
+              <h3 style="color: #1f2937; margin-bottom: 15px; font-weight: 700;">Premium Fleet</h3>
+              <p style="color: #6b7280; line-height: 1.6;">Travel in unparalleled style. Our state-of-the-art VIP
+                helicopters are meticulously maintained and equipped with ultra-luxury interiors.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">⏱️</div>
+              <h3 style="color: #1f2937; margin-bottom: 15px; font-weight: 700;">Absolute Efficiency</h3>
+              <p style="color: #6b7280; line-height: 1.6;">Skip city traffic and bridge massive distances in mere
+                minutes.
+                Your time is invaluable, and our on-demand flights guarantee you never waste a second.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">🛡️</div>
+              <h3 style="color: #1f2937; margin-bottom: 15px; font-weight: 700;">Certified Safety</h3>
+              <p style="color: #6b7280; line-height: 1.6;">Flown strictly by elite veteran pilots with thousands of
+                hours of
+                flight time. We adhere to the most rigorous aviation safety protocols worldwide.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="container our-team" id="team"
+          style="text-align: center; padding: 100px 20px; background: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.95)), url('https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80') center/cover fixed;">
+          <h2 class="section-title" style="color: white;">Meet Our Team</h2>
+          <p class="section-subtitle" style="color: #9ca3af;">
+            The dedicated professionals behind the seamless experiences at FlyHigh.
+          </p>
+
+          <div class="team-grid">
+
+            <div class="team-card">
+              <div class="feature-icon">👨‍✈️</div>
+              <h3 style="color: #1f2937; margin-bottom: 5px; font-weight: 700;">Mr Vankam Sreenivas</h3>
+              <p style="color: #3b82f6; font-weight: 600; margin-bottom: 15px; font-size: 15px;">CEO, FlyHigh</p>
+              <p style="color: #6b7280; line-height: 1.6;">Over 15 years of rotary-wing experience, ensuring the
+                absolute
+                highest safety standards on every flight.</p>
+            </div>
+
+            <div class="team-card">
+              <div class="feature-icon">👩‍💼</div>
+              <h3 style="color: #1f2937; margin-bottom: 5px; font-weight: 700;">Ms Nune Harshinee</h3>
+              <p style="color: #3b82f6; font-weight: 600; margin-bottom: 15px; font-size: 15px;">MD & CTO, FlyHigh</p>
+              <p style="color: #6b7280; line-height: 1.6;">Dedicated to providing personalized and luxurious pre-flight
+                services tailored to each VIP client.</p>
+            </div>
+
+            <div class="team-card">
+              <div class="feature-icon">👨‍💻</div>
+              <h3 style="color: #1f2937; margin-bottom: 5px; font-weight: 700;">Mr Karthikeya Raghuveer</h3>
+              <p style="color: #3b82f6; font-weight: 600; margin-bottom: 15px; font-size: 15px;">CFO & Head of Ops,
+                FlyHigh
+              </p>
+              <p style="color: #6b7280; line-height: 1.6;">Ensures our elite fleet is perfectly coordinated and ready
+                out of
+                all our premium operational hubs.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="container contact-us" id="contact"
+          style="background: #1f2937; color: white; text-align: center; padding: 60px 20px;">
+          <h2 style="font-size: 32px; margin-bottom: 20px;">Contact Us</h2>
+          <p style="color: #9ca3af; max-width: 600px; margin: 0 auto 40px auto; font-size: 18px; line-height: 1.6;">
+            Have any inquiries or ready to book your first flight? Our dedicated concierges are available 24/7 to assist
+            you.
+          </p>
+
+          <div style="display: flex; justify-content: center; gap: 50px; flex-wrap: wrap;">
+            <div>
+              <div style="font-size: 30px; margin-bottom: 10px;">📞</div>
+              <h4 style="margin-bottom: 5px;">Phone</h4>
+              <p style="color: #9ca3af;">+91 8331-890-555</p>
+            </div>
+
+            <div>
+              <div style="font-size: 30px; margin-bottom: 10px;">✉️</div>
+              <h4 style="margin-bottom: 5px;">Email</h4>
+              <p style="color: #9ca3af;">concierge@flyhigh.app</p>
+            </div>
+
+            <div>
+              <div style="font-size: 30px; margin-bottom: 10px;">📍</div>
+              <h4 style="margin-bottom: 5px;">Headquarters</h4>
+              <p style="color: #9ca3af;">Hangar 42, IIITDMK<br>Kurnool, IN 518002</p>
+            </div>
+          </div>
+
+          <div
+            style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #374151; max-width: 600px; margin-left: auto; margin-right: auto;">
+            <p style="color: #9ca3af; font-size: 16px;">
+              If you are a service provider, please contact <a href="mailto:admin@Flyhigh.in"
+                style="color: #60a5fa; text-decoration: none; font-weight: bold;">admin@Flyhigh.in</a>
+            </p>
+          </div>
+        </div>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            const dateInput = document.getElementById('searchDate');
+            if (dateInput) {
+              const today = new Date().toISOString().split('T')[0];
+              dateInput.min = today;
+            }
+          });
+
+          function validateSearch() {
+            const from = document.querySelector('select[name="from"]').value;
+            const to = document.querySelector('select[name="to"]').value;
+
+            if (from && to && from === to) {
+              alert("Departure and destination locations cannot be the same.");
+              return false;
+            }
+            return true;
+          }
+        </script>
+
+        <footer
+          style="background: #111827; color: #9ca3af; text-align: center; padding: 20px 0; font-size: 14px; border-top: 1px solid #374151;">
+          &copy; <%= new Date().getFullYear() %> FlyHigh India Pvt Ltd. All Rights Reserved.
+        </footer>
+
+</body>
+
+</html>
