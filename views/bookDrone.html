@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Book <%= drone ? drone.name : 'a Drone' %>
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .booking-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .drone-summary {
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2563eb;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .total-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+            text-align: center;
+            margin: 30px 0;
+            padding: 15px;
+            background: #eef2ff;
+            border-radius: 8px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+
+<body style="background: #f9fafb;">
+    <%- include('partials/navbar.html') %>
+
+        <div class="booking-container">
+            <h2 style="text-align: center; margin-bottom: 30px;">Complete Your Booking</h2>
+
+            <% if (drone) { %>
+                <div class="drone-summary">
+                    <h3 style="margin-bottom: 10px;">
+                        <%= drone.name %>
+                    </h3>
+                    <p style="margin: 5px 0;"><strong>Model:</strong>
+                        <%= drone.model %>
+                    </p>
+                    <p style="margin: 5px 0;"><strong>Camera:</strong>
+                        <%= drone.cameraType %>
+                    </p>
+                    <p style="margin: 5px 0; color: #2563eb;"><strong>Rate:</strong> $<%= drone.pricePerHour %> / Hour
+                    </p>
+                </div>
+                <% } %>
+
+                    <form action="/book-drone" method="POST">
+                        <% if (drone) { %>
+                            <input type="hidden" name="droneId" value="<%= drone._id %>">
+                            <input type="hidden" id="pricePerHour" value="<%= drone.pricePerHour %>">
+                            <% } else if (typeof purpose !=='undefined' && (purpose==='Delivery & Logistics' ||
+                                purpose==='Event Footage Coverage' || purpose==='Agriculture Monitoring' ||
+                                purpose==='Swarm Drones' )) { %>
+                                <!-- System auto-assigns, so no drone select here -->
+                                <input type="hidden" name="droneId" value="">
+                                <input type="hidden" id="pricePerHour" value="150"> <!-- Base setup rate -->
+                                <% } else { %>
+                                    <div class="form-group">
+                                        <label>Select a Drone</label>
+                                        <select name="droneId" id="droneSelect" class="form-control" required>
+                                            <option value="" disabled selected>Choose an available drone...</option>
+                                            <% if (typeof drones !=='undefined' && drones) { %>
+                                                <% drones.forEach(d=> { %>
+                                                    <option value="<%= d._id %>" data-price="<%= d.pricePerHour %>">
+                                                        <%= d.name %> ($<%= d.pricePerHour %> / Hour)
+                                                    </option>
+                                                    <% }) %>
+                                                        <% } %>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" id="pricePerHour" value="0">
+                                    <% } %>
+
+                                        <div class="form-group">
+                                            <label>Date of Booking</label>
+                                            <input type="date" name="startDate" id="bookingDate" class="form-control"
+                                                required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Time of Booking</label>
+                                            <input type="time" name="startTime" class="form-control" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Duration (Hours)</label>
+                                            <input type="number" name="hours" id="hoursInput" class="form-control"
+                                                min="1" max="24" value="1" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Purpose of Hire</label>
+                                            <% if (typeof purpose !=='undefined' && purpose) { %>
+                                                <input type="text" name="purpose" class="form-control"
+                                                    value="<%= purpose %>"
+                                                    style="background-color: #f3f4f6; cursor: not-allowed; font-weight: bold; color: #374151;"
+                                                    readonly required>
+                                                <% } else { %>
+                                                    <select name="purpose" class="form-control" required>
+                                                        <option value="" disabled selected>Select a purpose</option>
+                                                        <option value="Delivery & Logistics">Delivery & Logistics
+                                                        </option>
+                                                        <option value="Event Footage Coverage">Event Footage Coverage
+                                                        </option>
+                                                        <option value="Agriculture Monitoring">Agriculture Monitoring
+                                                        </option>
+                                                        <option value="Swarm Drones">Swarm Drones</option>
+                                                        <option value="Photography & Videography">Photography &
+                                                            Videography</option>
+                                                        <option value="Surveying & Mapping">Surveying & Mapping</option>
+                                                        <option value="Recreation & Racing">Recreation & Racing</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                    <% } %>
+                                        </div>
+
+                                        <!-- DYNAMIC FIELDS BASED ON PURPOSE -->
+                                        <% if (typeof purpose !=='undefined' && purpose==='Delivery & Logistics' ) { %>
+                                            <!-- For Delivery, we auto-assign the drone, so we don't show the selector -->
+                                            <div class="form-group"><label>Sender Name</label><input type="text"
+                                                    name="senderName" class="form-control" required /></div>
+                                            <div class="form-group"><label>Sender Phone</label><input type="tel"
+                                                    name="senderPhone" class="form-control" required /></div>
+                                            <div class="form-group"><label>Sender Address</label><input type="text"
+                                                    name="senderAddress" class="form-control" required /></div>
+                                            <div class="form-group"><label>Receiver Name</label><input type="text"
+                                                    name="receiverName" class="form-control" required /></div>
+                                            <div class="form-group"><label>Receiver Phone</label><input type="tel"
+                                                    name="receiverPhone" class="form-control" required /></div>
+                                            <div class="form-group"><label>Receiver Address</label><input type="text"
+                                                    name="receiverAddress" class="form-control" required /></div>
+                                            <% } %>
+
+                                                <% if (typeof purpose !=='undefined' &&
+                                                    purpose==='Event Footage Coverage' ) { %>
+                                                    <div class="form-group"><label>Event Details</label><input
+                                                            type="text" name="eventDetails" class="form-control"
+                                                            required /></div>
+                                                    <div class="form-group"><label>Event Location</label><input
+                                                            type="text" name="eventLocation" class="form-control"
+                                                            required /></div>
+                                                    <% } %>
+
+                                                        <% if (typeof purpose !=='undefined' &&
+                                                            purpose==='Agriculture Monitoring' ) { %>
+                                                            <div class="form-group"><label>Agricultural Land Area
+                                                                    (Acres)</label><input type="number"
+                                                                    name="agriculturalArea" id="agriculturalArea"
+                                                                    class="form-control" min="1" required /></div>
+                                                            <div class="form-group"><label>Land Location</label><input
+                                                                    type="text" name="landLocation" class="form-control"
+                                                                    required /></div>
+                                                            <% } %>
+
+                                                                <% if (typeof purpose !=='undefined' &&
+                                                                    purpose==='Swarm Drones' ) { %>
+                                                                    <div class="form-group"><label>Swarm Theme &
+                                                                            Concept</label><input type="text"
+                                                                            name="swarmTheme" class="form-control"
+                                                                            required /></div>
+                                                                    <div class="form-group"><label>Total Number of
+                                                                            Drones Required</label><input type="number"
+                                                                            name="swarmDronesRequired"
+                                                                            id="swarmDronesRequired"
+                                                                            class="form-control" min="1" required /></div>
+                                                                    <% } %>
+
+                                                                        <div class="total-price">
+                                                                            Total Amount: $<span id="totalDisplay">
+                                                                                <%= drone ? drone.pricePerHour : '0.00'
+                                                                                    %>
+                                                                            </span>
+                                                                        </div>
+
+                                                                        <button type="submit" class="submit-btn">Confirm
+                                                                            Booking</button>
+                    </form>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Set min date to today
+                const dateInput = document.getElementById('bookingDate');
+                if (dateInput) {
+                    const today = new Date().toISOString().split('T')[0];
+                    dateInput.min = today;
+                }
+
+                // Calculate total price dynamically
+                const hoursInput = document.getElementById('hoursInput');
+                const pricePerHourElement = document.getElementById('pricePerHour');
+                const totalDisplay = document.getElementById('totalDisplay');
+                const droneSelect = document.getElementById('droneSelect');
+
+                const agriculturalArea = document.getElementById('agriculturalArea');
+                const swarmDronesRequired = document.getElementById('swarmDronesRequired');
+
+                const updatePrice = () => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const currentPurpose = urlParams.get('purpose');
+                    const hours = parseInt(hoursInput.value) || 1;
+
+                    if (currentPurpose === 'Agriculture Monitoring' && agriculturalArea) {
+                        const acres = parseFloat(agriculturalArea.value) || 0;
+                        totalDisplay.textContent = (acres * 100).toFixed(2);
+                    } else if (currentPurpose === 'Swarm Drones' && swarmDronesRequired) {
+                        const noOfDrones = parseInt(swarmDronesRequired.value) || 0;
+                        totalDisplay.textContent = (noOfDrones * hours * 3).toFixed(2);
+                    } else {
+                        const price = parseFloat(pricePerHourElement.value) || 0;
+                        totalDisplay.textContent = (hours * price).toFixed(2);
+                    }
+                };
+
+                hoursInput.addEventListener('input', updatePrice);
+                if (agriculturalArea) {
+                    agriculturalArea.addEventListener('input', updatePrice);
+                }
+                if (swarmDronesRequired) {
+                    swarmDronesRequired.addEventListener('input', updatePrice);
+                }
+
+                if (droneSelect) {
+                    droneSelect.addEventListener('change', function () {
+                        const selectedOption = this.options[this.selectedIndex];
+                        pricePerHourElement.value = selectedOption.getAttribute('data-price');
+                        updatePrice();
+                    });
+                }
+            });
+        </script>
+</body>
+
+</html>
