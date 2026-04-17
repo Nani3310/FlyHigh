@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Pilot Dispatch Console | FlyHigh</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .pilot-dashboard {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 80vh;
+    }
+
+    .booking-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .booking-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .booking-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .booking-header {
+      background: #1e293b;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge {
+      background: #10b981;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .booking-body {
+      padding: 20px;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+      border-bottom: 1px dashed #f1f5f9;
+      padding-bottom: 8px;
+    }
+
+    .data-row span {
+      color: #64748b;
+    }
+
+    .data-row strong {
+      color: #0f172a;
+    }
+
+    .mission-specs {
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .mission-specs p {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      color: #334155;
+    }
+  </style>
+</head>
+
+<body style="background: #f8fafc;">
+
+  <%- include('partials/navbar.html') %>
+
+  <div class="pilot-dashboard">
+    <h1 style="color: #0f172a; margin-top: 0; font-size: 32px;">My Flight Assignments</h1>
+    <p style="color: #64748b; font-size: 16px;">View all active drone deployments authorized and assigned to your pilot account.</p>
+
+    <% if (bookings && bookings.length > 0) { %>
+      <div class="booking-grid">
+        <% bookings.forEach(b => { %>
+          <div class="booking-card">
+            
+            <div class="booking-header">
+              <span style="font-family: monospace; font-size: 14px; opacity: 0.9;">TICKET #<%= b._id.toString().substring(0,8).toUpperCase() %></span>
+              <span class="badge">CLEARED FOR FLIGHT</span>
+            </div>
+
+            <div class="booking-body">
+              <div class="data-row">
+                <span>Client Name:</span>
+                <strong><%= b.userId ? b.userId.name : 'Unknown' %></strong>
+              </div>
+              <div class="data-row">
+                <span>Client Contact:</span>
+                <strong><%= b.userId ? b.userId.mobile : 'N/A' %></strong>
+              </div>
+              <div class="data-row">
+                <span>Date & Time:</span>
+                <strong><%= b.startDate || 'N/A' %> at <%= b.startTime || 'N/A' %></strong>
+              </div>
+              <div class="data-row">
+                <span>Duration:</span>
+                <strong><%= b.hours || 0 %> Hours</strong>
+              </div>
+              <div class="data-row">
+                <span>Drone Hardware:</span>
+                <strong><%= b.droneId ? b.droneId.name : 'Any Compatible' %></strong>
+              </div>
+              <div class="data-row" style="border: none;">
+                <span>Total Expected Billable:</span>
+                <strong style="color: #2563eb; font-size: 16px;">$<%= b.totalAmount %></strong>
+              </div>
+
+              <% if (b.purposeDetails && Object.keys(b.purposeDetails).length > 0) { %>
+                <div class="mission-specs">
+                  <h4 style="margin: 0 0 10px 0; color: #1e40af; font-size: 12px; text-transform: uppercase;">Mission Configuration (<%= b.purpose %>)</h4>
+                  <% Object.entries(b.purposeDetails).forEach(([key, value]) => { %>
+                    <p>
+                      <strong style="color: #475569;"><%= key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()) %>:</strong> <%= value %>
+                    </p>
+                  <% }) %>
+                </div>
+              <% } %>
+            </div>
+
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div style="background: white; padding: 50px; text-align: center; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-top: 30px; border: 1px dashed #cbd5e1;">
+        <h3 style="color: #475569; margin: 0 0 10px 0;">No Missions Assigned Yet</h3>
+        <p style="color: #94a3b8; font-size: 15px; margin: 0;">FlyHigh Dispatch has not routed any active drone flights to your queue.</p>
+      </div>
+    <% } %>
+
+  </div>
+
+</body>
+</html>
