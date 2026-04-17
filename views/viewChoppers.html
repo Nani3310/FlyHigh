@@ -1,0 +1,40 @@
+<%- include('partials/adminSidebar.html') %>
+<div class="auth-container" style="height: auto; min-height: 80vh;">
+  <div class="auth-card" style="width: 80%; max-width: 800px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="margin: 0;">All Choppers</h2>
+      <a href="/admin/add-chopper" style="background: #2563eb; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; transition: background 0.3s;" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">+ Add New</a>
+    </div>
+
+    <div class="data-table-container" style="box-shadow: none; margin-top: 10px;">
+      <table class="data-table" style="text-align: left;">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Seats</th>
+            <th>Speed</th>
+            <th>Price/Km</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% choppers.forEach(c => { %>
+            <tr>
+              <td><strong><%= c.model %></strong></td>
+              <td><%= c.seats %></td>
+              <td><%= c.speed %> km/h</td>
+              <td><span class="badge">₹<%= c.pricePerKm %></span></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+</body>
+</html>
+
+</div>
+</div>
