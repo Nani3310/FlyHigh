@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Register</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<%- include('partials/navbar.html') %>
+
+<div class="auth-container">
+
+  <div class="auth-card">
+
+    <h2>Create Account</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+
+      <input name="name" placeholder="Name" required>
+
+      <input name="email" type="email" placeholder="Email" required>
+
+      <div style="margin: 10px 0; width: 100%;">
+        <select name="role" id="roleSelect" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; font-size: 16px; color: #374151;">
+          <option value="user" selected>Customer</option>
+          <option value="drone_pilot">Drone Pilot</option>
+        </select>
+      </div>
+
+      <div id="pilotFields" style="display: none; width: 100%; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-bottom: 10px; box-sizing: border-box;">
+        <h4 style="margin-top: 0; margin-bottom: 10px; color: #334155; font-size: 14px;">Pilot Credentials</h4>
+        
+        <input type="number" name="experienceYears" id="experienceYears" placeholder="Years of Experience" min="0" style="width: 100%; margin-bottom: 10px; box-sizing: border-box; padding: 10px;">
+        
+        <label style="display: block; font-size: 13px; color: #64748b; margin-bottom: 5px;">Upload Pilot License Document</label>
+        <input type="file" name="licenseDocument" id="licenseDocument" accept=".pdf,.jpg,.png" style="width: 100%; box-sizing: border-box; padding: 8px; background: white; border: 1px solid #d1d5db; border-radius: 4px;">
+      </div>
+
+      <div style="margin: 10px 0; width: 100%;">
+        <input name="mobile" id="mobile" type="tel" placeholder="Mobile Number" required style="width: 100%; box-sizing: border-box;"
+          pattern="^\d{10}$"
+          title="Please enter exactly 10 digits">
+      </div>
+      <input type="hidden" name="countryCode" id="countryCode">
+
+      <div style="position: relative; width: 100%; margin: 10px 0;">
+        <input name="password" id="password" type="password" placeholder="Password" required style="width: 100%; box-sizing: border-box; margin: 0; padding-right: 40px;"
+          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}"
+          title="Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.">
+        <span id="togglePassword" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; font-size: 18px; color: #6b7280;">👁️</span>
+      </div>
+
+      <button type="submit">Register</button>
+
+    </form>
+
+    <div class="auth-redirect">
+      <p>Already have an account? <a href="/login">Login</a></p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  document.getElementById('togglePassword').addEventListener('click', function() {
+    const passwordInput = document.getElementById('password');
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+    } else {
+      passwordInput.type = 'password';
+    }
+  });
+
+  document.getElementById('roleSelect').addEventListener('change', function() {
+    const pilotFields = document.getElementById('pilotFields');
+    const expInput = document.getElementById('experienceYears');
+    const docInput = document.getElementById('licenseDocument');
+
+    if (this.value === 'drone_pilot') {
+      pilotFields.style.display = 'block';
+      expInput.required = true;
+      docInput.required = true;
+    } else {
+      pilotFields.style.display = 'none';
+      expInput.required = false;
+      docInput.required = false;
+      expInput.value = '';
+      docInput.value = '';
+    }
+  });
+</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script>
+  const phoneInputField = document.querySelector("#mobile");
+  const phoneInput = window.intlTelInput(phoneInputField, {
+    initialCountry: "in",
+    separateDialCode: true,
+    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+  });
+
+  document.querySelector("form").addEventListener("submit", function() {
+    document.querySelector("#countryCode").value = "+" + phoneInput.getSelectedCountryData().dialCode;
+  });
+</script>
+<style>
+  .iti { width: 100%; }
+  .iti__flag { background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags.png"); }
+  @media (min-resolution: 2x) {
+    .iti__flag { background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags@2x.png"); }
+  }
+</style>
+
+</body>
+</html>

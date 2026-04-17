@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Search Results</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<%- include('partials/navbar.html') %>
+
+<div class="container">
+
+<h2>Available Choppers</h2>
+
+<p>
+Route: <strong><%= route.from %> → <%= route.to %></strong>
+</p>
+
+<p>
+Date: <%= date %> | Time: <%= time %>
+</p>
+
+<% choppers.forEach(c => { %>
+
+<div class="result-card">
+  <% if (c.photo) { %>
+    <img src="<%= c.photo.startsWith('data:') || c.photo.startsWith('http') ? c.photo : '/uploads/' + c.photo %>" class="result-image" alt="<%= c.model %>">
+  <% } else { %>
+    <div class="result-image" style="background: #e2e8f0; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-weight: bold; font-size: 1.2rem;">
+      No Image Available
+    </div>
+  <% } %>
+  <div class="result-content">
+    <div class="result-header">
+      <h3 class="result-title"><%= c.model %></h3>
+      <div class="result-fare">₹ <%= c.pricePerKm * route.distanceKm %> <span style="font-size: 0.9rem; color: #94a3b8; font-weight: normal;">(Total Fare)</span></div>
+    </div>
+    
+    <div class="result-stats">
+      <div class="stat-item">
+        <span style="font-size: 1.2rem;">👨‍✈️</span> Capacity: <%= c.seats %> Seats
+      </div>
+      <div class="stat-item">
+        <span style="font-size: 1.2rem;">✈️</span> Top Speed: <%= c.speed %> km/h
+      </div>
+    </div>
+
+    <div class="result-action">
+      <a href="/book/<%= c._id %>/<%= route._id %>?date=<%= date %>&time=<%= time %>" class="result-btn">
+        Book Now
+      </a>
+    </div>
+  </div>
+</div>
+
+<% }) %>
+
+</div>
+
+</body>
+</html>
