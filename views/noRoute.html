@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Route Not Found</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .error-container {
+            max-width: 600px;
+            margin: 100px auto;
+            text-align: center;
+            padding: 50px 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #f3f4f6;
+        }
+
+        .error-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .error-title {
+            font-size: 32px;
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .error-message {
+            font-size: 18px;
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .highlight {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .btn-home {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            transition: background 0.3s;
+        }
+
+        .btn-home:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+
+<body style="background: #f9fafb; font-family: 'Inter', sans-serif; margin: 0;">
+    <%- include('partials/navbar.html') %>
+
+        <div class="error-container">
+            <div class="error-icon">🗺️</div>
+            <h2 class="error-title">We're sincerely sorry!</h2>
+            <p class="error-message">
+                Currently, we haven't established a route between <span class="highlight">
+                    <%= from %>
+                </span> and <span class="highlight">
+                    <%= to %>
+                </span>.
+                <br><br>
+                We are constantly expanding our fleet's coverage and adding luxury destinations every month. Thank you
+                for your patience—we hope to serve this route very soon!
+            </p>
+            <a href="/" class="btn-home">Find Another Destination</a>
+        </div>
+
+</body>
+
+</html>
